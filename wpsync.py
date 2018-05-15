@@ -163,16 +163,16 @@ if(stage1['action'] == 'dirs2'):
     ndirs = []
     dirs = os.listdir('../')
     for d in dirs:
-        if(os.path.isdir('../'+d+'/public_html/') == True):
-            d2 = os.listdir('../'+d+'/public_html/')
+        if(os.path.isdir('../'+d+'/') == True):
+            d2 = os.listdir('../'+d+'/')
             for d3 in d2:
-                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/public_html/'+d3) == True): 
-                    if os.path.isfile('../'+d+'/public_html/'+d3+'/wp-includes/version.php'):
-                        f=open('../'+d+'/public_html/'+d3+'/wp-includes/version.php')
+                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/'+d3) == True): 
+                    if os.path.isfile('../'+d+'/'+d3+'/wp-includes/version.php'):
+                        f=open('../'+d+'/'+d3+'/wp-includes/version.php')
                         lines=f.readlines()
                         nl = lines[6].split('=')
-                        # ndirs.append(tuple({d+' ('+nl[1][2:-3]+')','../'+d+'/public_html/'+d3}))
-                        ndirs.append('../'+d+'/public_html/'+d3)
+                        # ndirs.append(tuple({d+' ('+nl[1][2:-3]+')','../'+d+'/'+d3}))
+                        ndirs.append('../'+d+'/'+d3)
     questions = [
     inquirer.List('action2',
         message="Select directory",
@@ -189,35 +189,35 @@ if(stage1['action'] == 'dirs'):
     ndirs = []
     dirs = os.listdir('../')
     for d in dirs:
-        if(os.path.isdir('../'+d+'/public_html/') == True):
-            d2 = os.listdir('../'+d+'/public_html/')
+        if(os.path.isdir('../'+d+'/') == True):
+            d2 = os.listdir('../'+d+'/')
           
             for d3 in d2:
-                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/public_html/'+d3) == True):
+                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/'+d3) == True):
                     print("")
                     print(d)
-                    if os.path.isfile('../'+d+'/public_html/'+d3+'/wp-includes/version.php'):
-                        f=open('../'+d+'/public_html/'+d3+'/wp-includes/version.php')
+                    if os.path.isfile('../'+d+'/'+d3+'/wp-includes/version.php'):
+                        f=open('../'+d+'/'+d3+'/wp-includes/version.php')
                         lines=f.readlines()
                         nl = lines[6].split('=')
                         print (G+"core: "+nl[1][2:-3]+W)
-                        if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider') == True:
-                            lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
+                        if os.path.isdir('../'+d+'/'+d3+'/wp-content/plugins/revslider') == True:
+                            lines=open('../'+d+'/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
                             nl = lines[6].split(':')
                             if(nl[1][1:-2] == base_versions[0]['revslider']):
                                print(G+"revslider: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"revslider: "+nl[1][1:-1]+''+W)
-                               ndirs.append('../'+d+'/public_html/'+d3+'/')
+                               ndirs.append('../'+d+'/'+d3+'/')
 
-                        if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer') == True:
-                            lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
+                        if os.path.isdir('../'+d+'/'+d3+'/wp-content/plugins/js_composer') == True:
+                            lines=open('../'+d+'/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
                             nl = lines[5].split(':')
                             if(nl[1][1:-1] == base_versions[1]['js_composer']):
                                print(G+"js_composer: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"js_composer: "+nl[1][1:-1]+''+W)
-                               ndirs.append('../'+d+'/public_html/'+d3+'/')
+                               ndirs.append('../'+d+'/'+d3+'/')
                                
     questions = [
     inquirer.List('action',
