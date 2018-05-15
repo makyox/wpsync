@@ -157,7 +157,7 @@ if(stage1['action'] == 'dirs'):
             d2 = os.listdir(base_dir+d+'/')
           
             for d3 in d2:
-                if(d3.find("wordpress") != -1 and os.path.isdir(base_dir+d+'/'+d3) == True):
+                if((d3.find("wordpress") != -1 or d3.find("wupe") != -1) and os.path.isdir(base_dir+d+'/'+d3) == True):
                     print("")
                     print(d)
                     if os.path.isfile(base_dir+d+'/'+d3+'/wp-includes/version.php'):
@@ -181,7 +181,8 @@ if(stage1['action'] == 'dirs'):
                                print(G+"js_composer: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"js_composer: "+nl[1][1:-1]+''+W)
-                               ndirs.append(base_dir+d+'/'+d3+'/')
+                               if base_dir+d+'/'+d3+'/' not in ndirs:
+                                  ndirs.append(base_dir+d+'/'+d3+'/')
                                
     questions = [
     inquirer.List('action',
