@@ -40,6 +40,7 @@ args2 = vars(parser.parse_args())
 args3 = parser.parse_args()
 target = args3.t
 plugins_dir = 'plugins'
+base_dir = '../domains_wp/';
 target_dir = target+'wp-content/plugins'
 
 
@@ -135,7 +136,6 @@ questions = [
         message="Select operation?",
         choices=[
           ('List dirs', 'dirs'),
-          ('List dirs + select', 'dirs2'),
           ('Source plugins check', 'source'),
           ('Destination versions', 'versions'),
           ('Just sync it!', 'sync')
@@ -144,80 +144,44 @@ questions = [
 ]
 
 stage1 = inquirer.prompt(questions)
-
-# myar = ('test','test')+('test2','test2'),+('test3')
-
-# hosts = [
-#     inquirer.List('action2',
-#         message="Select operation?",
-#         choices=[myar],
-#         default=['source']),
-# ]
-
-# stage2 = inquirer.prompt(hosts)
-
 modules = list_modules(plugins_dir)
-
-if(stage1['action'] == 'dirs2'):
-    
-    ndirs = []
-    dirs = os.listdir('../')
-    for d in dirs:
-        if(os.path.isdir('../'+d+'/') == True):
-            d2 = os.listdir('../'+d+'/')
-            for d3 in d2:
-                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/'+d3) == True): 
-                    if os.path.isfile('../'+d+'/'+d3+'/wp-includes/version.php'):
-                        f=open('../'+d+'/'+d3+'/wp-includes/version.php')
-                        lines=f.readlines()
-                        nl = lines[6].split('=')
-                        # ndirs.append(tuple({d+' ('+nl[1][2:-3]+')','../'+d+'/'+d3}))
-                        ndirs.append('../'+d+'/'+d3)
-    questions = [
-    inquirer.List('action2',
-        message="Select directory",
-        choices=ndirs),
-    ]
-    stage1 = inquirer.prompt(questions)
-    pprint(stage1)
-
 
 if(stage1['action'] == 'dirs'):
     base_versions = list_modules_full(plugins_dir)
     pprint(base_versions)
     print('')
     ndirs = []
-    dirs = os.listdir('../')
+    dirs = os.listdir(base_dir)
     for d in dirs:
-        if(os.path.isdir('../'+d+'/') == True):
-            d2 = os.listdir('../'+d+'/')
+        if(os.path.isdir(base_dir+d+'/') == True):
+            d2 = os.listdir(base_dir+d+'/')
           
             for d3 in d2:
-                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/'+d3) == True):
+                if(d3.find("wordpress") != -1 and os.path.isdir(base_dir+d+'/'+d3) == True):
                     print("")
                     print(d)
-                    if os.path.isfile('../'+d+'/'+d3+'/wp-includes/version.php'):
-                        f=open('../'+d+'/'+d3+'/wp-includes/version.php')
+                    if os.path.isfile(base_dir+d+'/'+d3+'/wp-includes/version.php'):
+                        f=open(base_dir+d+'/'+d3+'/wp-includes/version.php')
                         lines=f.readlines()
                         nl = lines[6].split('=')
                         print (G+"core: "+nl[1][2:-3]+W)
-                        if os.path.isdir('../'+d+'/'+d3+'/wp-content/plugins/revslider') == True:
-                            lines=open('../'+d+'/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
+                        if os.path.isdir(base_dir+d+'/'+d3+'/wp-content/plugins/revslider') == True:
+                            lines=open(base_dir+d+'/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
                             nl = lines[6].split(':')
                             if(nl[1][1:-2] == base_versions[0]['revslider']):
                                print(G+"revslider: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"revslider: "+nl[1][1:-1]+''+W)
-                               ndirs.append('../'+d+'/'+d3+'/')
+                               ndirs.append(base_dir+d+'/'+d3+'/')
 
-                        if os.path.isdir('../'+d+'/'+d3+'/wp-content/plugins/js_composer') == True:
-                            lines=open('../'+d+'/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
+                        if os.path.isdir(base_dir+d+'/'+d3+'/wp-content/plugins/js_composer') == True:
+                            lines=open(base_dir+d+'/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
                             nl = lines[5].split(':')
                             if(nl[1][1:-1] == base_versions[1]['js_composer']):
                                print(G+"js_composer: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"js_composer: "+nl[1][1:-1]+''+W)
-                               ndirs.append('../'+d+'/'+d3+'/')
+                               ndirs.append(base_dir+d+'/'+d3+'/')
                                
     questions = [
     inquirer.List('action',
