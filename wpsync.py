@@ -102,9 +102,10 @@ def check_versions():
             nl = lines[versions[item]].split(':')
             print nl[1][1:]
 
-def main():
+def main(target): 
     if(os.path.isdir(target) == True):
         print ''
+        target_dir = target+'wp-content/plugins'
         print (W+'Lets start!'+W)
         for item in modules:
             itemn = item[:-4]
@@ -134,6 +135,7 @@ questions = [
         message="Select operation?",
         choices=[
           ('List dirs', 'dirs'),
+          ('List dirs + select', 'dirs2'),
           ('Source plugins check', 'source'),
           ('Destination versions', 'versions'),
           ('Just sync it!', 'sync')
@@ -154,15 +156,37 @@ stage1 = inquirer.prompt(questions)
 
 # stage2 = inquirer.prompt(hosts)
 
-
-
 modules = list_modules(plugins_dir)
+
+if(stage1['action'] == 'dirs2'):
+    
+    ndirs = []
+    dirs = os.listdir('../')
+    for d in dirs:
+        if(os.path.isdir('../'+d+'/public_html/') == True):
+            d2 = os.listdir('../'+d+'/public_html/')
+            for d3 in d2:
+                if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/public_html/'+d3) == True): 
+                    if os.path.isfile('../'+d+'/public_html/'+d3+'/wp-includes/version.php'):
+                        f=open('../'+d+'/public_html/'+d3+'/wp-includes/version.php')
+                        lines=f.readlines()
+                        nl = lines[6].split('=')
+                        # ndirs.append(tuple({d+' ('+nl[1][2:-3]+')','../'+d+'/public_html/'+d3}))
+                        ndirs.append('../'+d+'/public_html/'+d3)
+    questions = [
+    inquirer.List('action2',
+        message="Select directory",
+        choices=ndirs),
+    ]
+    stage1 = inquirer.prompt(questions)
+    pprint(stage1)
 
 
 if(stage1['action'] == 'dirs'):
     base_versions = list_modules_full(plugins_dir)
     pprint(base_versions)
     print('')
+    ndirs = []
     dirs = os.listdir('../')
     for d in dirs:
         if(os.path.isdir('../'+d+'/public_html/') == True):
@@ -172,24 +196,37 @@ if(stage1['action'] == 'dirs'):
                 if(d3.find("wordpress") != -1 and os.path.isdir('../'+d+'/public_html/'+d3) == True):
                     print("")
                     print(d)
-                    f=open('../'+d+'/public_html/'+d3+'/wp-includes/version.php')
-                    lines=f.readlines()
-                    nl = lines[6].split('=')
-                    print (G+"core: "+nl[1][2:-3]+W)
-                    if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider') == True:
-                        lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
-                        nl = lines[6].split(':')
-                        if(nl[1][1:-2] == base_versions[0]['revslider']):
-                           print(G+"revslider: "+nl[1][1:-1]+''+W)
-                        else:
-                           print(R+"revslider: "+nl[1][1:-1]+''+W)
-                    if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer') == True:
-                        lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
-                        nl = lines[5].split(':')
-                        if(nl[1][1:-1] == base_versions[1]['js_composer']):
-                           print(G+"js_composer: "+nl[1][1:-1]+''+W)
-                        else:
-                           print(R+"js_composer: "+nl[1][1:-1]+''+W)
+                    if os.path.isfile('../'+d+'/public_html/'+d3+'/wp-includes/version.php'):
+                        f=open('../'+d+'/public_html/'+d3+'/wp-includes/version.php')
+                        lines=f.readlines()
+                        nl = lines[6].split('=')
+                        print (G+"core: "+nl[1][2:-3]+W)
+                        if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider') == True:
+                            lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
+                            nl = lines[6].split(':')
+                            if(nl[1][1:-2] == base_versions[0]['revslider']):
+                               print(G+"revslider: "+nl[1][1:-1]+''+W)
+                            else:
+                               print(R+"revslider: "+nl[1][1:-1]+''+W)
+                               ndirs.append('../'+d+'/public_html/'+d3+'/')
+
+                        if os.path.isdir('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer') == True:
+                            lines=open('../'+d+'/public_html/'+d3+'/wp-content/plugins/js_composer/js_composer.php').readlines()
+                            nl = lines[5].split(':')
+                            if(nl[1][1:-1] == base_versions[1]['js_composer']):
+                               print(G+"js_composer: "+nl[1][1:-1]+''+W)
+                            else:
+                               print(R+"js_composer: "+nl[1][1:-1]+''+W)
+                               ndirs.append('../'+d+'/public_html/'+d3+'/')
+                               
+    questions = [
+    inquirer.List('action',
+        message="Select directory",
+        choices=ndirs),
+    ]
+    if len(ndirs):
+        stage2 = inquirer.prompt(questions)
+
 if(stage1['action'] == 'versions'):
     check_versions()
     quit()
@@ -199,4 +236,7 @@ if(stage1['action'] == 'source'):
     quit()
 
 if(stage1['action'] == 'sync'): 
-    main()
+    main(target=args3.t)
+
+if 'stage2' in locals():
+    main(target=stage2['action'])
