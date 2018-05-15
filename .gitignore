@@ -1,2 +1,6 @@
 plugins/
 libs/
+functions.py
+functions.pyc
+wpupdate/
+zeroconf/
