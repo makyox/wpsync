@@ -120,33 +120,18 @@ def main(target):
                     zip_ref.extractall(target_dir)
             else:
                 print(R+'target '+item+' dir not found, nothin to do here'+W)
-            
         print(G+'DONE/DONE'+W)
+        list_dirs()
+    elif(target == "exit"):
+        quit()
     else:
         print(R+'target dir not found :/'+W)
 
-class wpsync:
-    variable = "stable"
-    def function(self):
-            print('ok')
+def update_it(stage2):
+    if 'stage2' in locals():
+        main(target=stage2['action'])
 
-
-questions = [
-    inquirer.List('action',
-        message="Select operation?",
-        choices=[
-          ('List dirs', 'dirs'),
-          ('Source plugins check', 'source'),
-          ('Destination versions', 'versions'),
-          ('Just sync it!', 'sync')
-        ],
-        default=['source']),
-]
-
-stage1 = inquirer.prompt(questions)
-modules = list_modules(plugins_dir)
-
-if(stage1['action'] == 'dirs'):
+def list_dirs():
     base_versions = list_modules_full(plugins_dir)
     pprint(base_versions)
     print('')
@@ -183,7 +168,9 @@ if(stage1['action'] == 'dirs'):
                                print(R+"js_composer: "+nl[1][1:-1]+''+W)
                                if base_dir+d+'/'+d3+'/' not in ndirs:
                                   ndirs.append(base_dir+d+'/'+d3+'/')
-                               
+                  
+    ndirs.append("")                           
+    ndirs.append(('Do nothing and exit!', 'exit'))                           
     questions = [
     inquirer.List('action',
         message="Select directory",
@@ -191,6 +178,32 @@ if(stage1['action'] == 'dirs'):
     ]
     if len(ndirs):
         stage2 = inquirer.prompt(questions)
+        main(target=stage2['action'])
+
+class wpsync:
+    variable = "stable"
+    def function(self):
+            print('ok')
+
+
+questions = [
+    inquirer.List('action',
+        message="Select operation?",
+        choices=[
+          ('List dirs', 'dirs'),
+          ('Source plugins check', 'source'),
+          ('Destination versions', 'versions'),
+          ('Just sync it!', 'sync')
+        ],
+        default=['source']),
+]
+
+stage1 = inquirer.prompt(questions)
+modules = list_modules(plugins_dir)
+
+if(stage1['action'] == 'dirs'):
+    list_dirs()
+    quit()
 
 if(stage1['action'] == 'versions'):
     check_versions()
@@ -202,6 +215,3 @@ if(stage1['action'] == 'source'):
 
 if(stage1['action'] == 'sync'): 
     main(target=args3.t)
-
-if 'stage2' in locals():
-    main(target=stage2['action'])
