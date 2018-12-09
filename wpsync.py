@@ -40,7 +40,7 @@ args2 = vars(parser.parse_args())
 args3 = parser.parse_args()
 target = args3.t
 plugins_dir = 'plugins'
-base_dir = '../domains_wp/';
+base_dir = target
 target_dir = target+'wp-content/plugins'
 
 
@@ -139,8 +139,11 @@ def list_dirs():
     dirs = os.listdir(base_dir)
     for d in dirs:
         if(os.path.isdir(base_dir+d+'/') == True):
+            if(os.path.isdir(base_dir+d+'/public_html')):
+                d = d+'/public_html/'
+            else:
+                d = d
             d2 = os.listdir(base_dir+d+'/')
-          
             for d3 in d2:
                 if((d3.find("wordpress") != -1 or d3.find("wupe") != -1) and os.path.isdir(base_dir+d+'/'+d3) == True):
                     print("")
