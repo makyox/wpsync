@@ -168,7 +168,7 @@ if(stage1['action'] == 'dirs'):
                         if os.path.isdir(base_dir+d+'/'+d3+'/wp-content/plugins/revslider') == True:
                             lines=open(base_dir+d+'/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
                             nl = lines[6].split(':')
-                            if(nl[1][1:-2] == base_versions[0]['revslider']):
+                            if(nl[1][1:-1] == base_versions[0]['revslider']):
                                print(G+"revslider: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"revslider: "+nl[1][1:-1]+''+W)
