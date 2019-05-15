@@ -138,6 +138,7 @@ def list_dirs():
     ndirs = []
     dirs = os.listdir(base_dir)
     for d in dirs:
+
         if(os.path.isdir(base_dir+d+'/') == True):
             if(os.path.isdir(base_dir+d+'/public_html')):
                 d = d+'/public_html/'
@@ -145,18 +146,18 @@ def list_dirs():
                 d = d
             d2 = os.listdir(base_dir+d+'/')
             for d3 in d2:
-                if((d3.find("wordpress") != -1 or d3.find("wupe") != -1) and os.path.isdir(base_dir+d+'/'+d3) == True):
+                if((d3.find("wordpress") != -1 or d3.find("wupe") != -1 or d3.find("beta") != -1) and os.path.isdir(base_dir+d+'/'+d3) == True):
                     print("")
                     print(d)
                     if os.path.isfile(base_dir+d+'/'+d3+'/wp-includes/version.php'):
                         f=open(base_dir+d+'/'+d3+'/wp-includes/version.php')
                         lines=f.readlines()
-                        nl = lines[6].split('=')
+                        nl = lines[15].split('=')
                         print (G+"core: "+nl[1][2:-3]+W)
                         if os.path.isdir(base_dir+d+'/'+d3+'/wp-content/plugins/revslider') == True:
                             lines=open(base_dir+d+'/'+d3+'/wp-content/plugins/revslider/revslider.php').readlines()
                             nl = lines[6].split(':')
-                            if(nl[1][1:-1] == base_versions[0]['revslider']):
+                            if(nl[1][1:-2] == base_versions[0]['revslider']):
                                print(G+"revslider: "+nl[1][1:-1]+''+W)
                             else:
                                print(R+"revslider: "+nl[1][1:-1]+''+W)
